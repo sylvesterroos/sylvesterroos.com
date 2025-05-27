@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
+import { getPublishedBlogPosts } from "../../utils/collections.ts";
 
-const posts = (await getCollection("blog")).sort(
+const posts = (await getPublishedBlogPosts()).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
@@ -33,6 +33,18 @@ const posts = (await getCollection("blog")).sort(
                 ))
             }
         </ul>
+        {
+            posts.length === 0 && (
+                <div class="text-center py-12">
+                    <h2 class="text-2xl mb-4 text-base-content">
+                        No posts yet
+                    </h2>
+                    <p class="text-base-content">
+                        Check back soon for something new!
+                    </p>
+                </div>
+            )
+        }
     </section>
 </BaseLayout>
 
