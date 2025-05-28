@@ -12,5 +12,8 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ["odysseus.allosaurus-snapper.ts.net"],
+    },
   },
 });
