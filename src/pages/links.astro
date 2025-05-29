@@ -2,6 +2,14 @@
 import WideLayout from "../layouts/WideLayout.astro";
 import { linkCategories } from "../data/links.ts";
 import { Icon } from "astro-icon/components";
+
+function parseMarkdownLinks(text: string): string {
+  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  return text.replace(
+    markdownLinkRegex,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="link link-primary">$1</a>',
+  );
+}
 ---
 
 <WideLayout>
@@ -34,7 +42,10 @@ import { Icon } from "astro-icon/components";
                       >
                         {link.name}
                       </a>
-                      <p class="text-sm opacity-75">{link.description}</p>
+                      <p
+                        class="text-sm opacity-75"
+                        set:html={parseMarkdownLinks(link.description)}
+                      />
                     </div>
                   ))}
                 </div>
@@ -55,7 +66,10 @@ import { Icon } from "astro-icon/components";
                             >
                               {link.name}
                             </a>
-                            <p class="text-xs opacity-75 mt-1">{link.description}</p>
+                            <p
+                              class="text-xs opacity-75 mt-1"
+                              set:html={parseMarkdownLinks(link.description)}
+                            />
                           </div>
                         ))}
                       </div>
