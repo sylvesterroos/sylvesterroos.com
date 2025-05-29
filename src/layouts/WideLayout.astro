@@ -6,14 +6,14 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 ---
 
 <html lang="en">
-    <head>
-        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    </head>
-    <body class="container mx-auto">
-        <Header />
-        <main class="px-4">
-            <slot />
-        </main>
-        <Footer />
-    </body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="container mx-auto">
+    <Header />
+    <main class="px-4">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>

@@ -12,60 +12,58 @@ const proseBase = "prose-xl";
 const headingStyles = "prose-headings:font-bold";
 const linkStyles = "prose-a:link prose-a:link-primary";
 const listStyles =
-    "prose-ul:list-disc prose-ul:list-outside prose-ol:list-decimal prose-ol:list-outside";
+  "prose-ul:list-disc prose-ul:list-outside prose-ol:list-decimal prose-ol:list-outside";
 const blockquoteStyles =
-    "prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4";
+  "prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4";
 const inlineCodeStyle =
-    "prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-base-200";
-const inlineCode_CodeBlockReset =
-    "prose-pre:prose-code:bg-transparent prose-pre:prose-code:p-0";
+  "prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-base-200";
+const inlineCode_CodeBlockReset = "prose-pre:prose-code:bg-transparent prose-pre:prose-code:p-0";
 
 const proseClasses = [
-    proseBase,
-    headingStyles,
-    linkStyles,
-    listStyles,
-    blockquoteStyles,
-    inlineCodeStyle,
-    inlineCode_CodeBlockReset,
+  proseBase,
+  headingStyles,
+  linkStyles,
+  listStyles,
+  blockquoteStyles,
+  inlineCodeStyle,
+  inlineCode_CodeBlockReset,
 ].join(" ");
 ---
 
 <BaseLayout>
-    <article class="w-full max-w-full m-0">
-        <div class="w-full">
-            {
-                heroImage && (
-                    <img
-                        width={1020}
-                        height={510}
-                        src={heroImage}
-                        alt=""
-                        class="block mx-auto rounded-xl shadow-lg"
-                    />
-                )
-            }
+  <article class="w-full max-w-full m-0">
+    <div class="w-full">
+      {
+        heroImage && (
+          <img
+            width={1020}
+            height={510}
+            src={heroImage}
+            alt=""
+            class="block mx-auto rounded-xl shadow-lg"
+          />
+        )
+      }
+    </div>
+    <!-- class="prose w-[720px] max-w-[calc(100%-2em)] mx-auto p-4 text-gray-800" -->
+    <div class={proseClasses}>
+      <div class="mb-4 py-4 text-center leading-none">
+        <div class="mb-2 text-gray-500">
+          <FormattedDate date={pubDate} />
+          {
+            updatedDate && (
+              <div class="italic">
+                Last updated on <FormattedDate date={updatedDate} />
+              </div>
+            )
+          }
         </div>
-        <!-- class="prose w-[720px] max-w-[calc(100%-2em)] mx-auto p-4 text-gray-800" -->
-        <div class={proseClasses}>
-            <div class="mb-4 py-4 text-center leading-none">
-                <div class="mb-2 text-gray-500">
-                    <FormattedDate date={pubDate} />
-                    {
-                        updatedDate && (
-                            <div class="italic">
-                                Last updated on{" "}
-                                <FormattedDate date={updatedDate} />
-                            </div>
-                        )
-                    }
-                </div>
-                <h1 class="mb-2">{title}</h1>
-                <hr />
-            </div>
-            <slot />
-        </div>
-    </article>
+        <h1 class="mb-2">{title}</h1>
+        <hr />
+      </div>
+      <slot />
+    </div>
+  </article>
 </BaseLayout>
 
 <!-- <html lang="en">

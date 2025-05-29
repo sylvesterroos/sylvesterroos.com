@@ -5,13 +5,13 @@ const today = new Date();
 ---
 
 <footer>
-    <div class="footer-content">
-        <div class="copyright">
-            &copy; {today.getFullYear()} Sylvester Roos. Licensed under <a
-                href="https://creativecommons.org/licenses/by-sa/4.0/"
-                target="_blank">CC BY-SA 4.0</a
-            >.
-        </div>
+  <div class="footer-content">
+    <div class="copyright">
+      &copy; {today.getFullYear()} Sylvester Roos. Licensed under <a
+        href="https://creativecommons.org/licenses/by-sa/4.0/"
+        target="_blank">CC BY-SA 4.0</a
+      >.
+    </div>
 
     <div class="social-links">
       <a href="https://x.com/sylvesterroos" target="_blank" title="X">
@@ -28,97 +28,82 @@ const today = new Date();
       </a>
     </div>
 
-        <div class="tech-stack">
-            <span>Built with</span>
-            <a
-                href="https://astro.build"
-                target="_blank"
-                title="Astro"
-                class="tech-link"
-            >
-                <Icon name="tabler:brand-astro" size={20} />
-            </a>
-            <span>&</span>
-            <a
-                href="https://tailwindcss.com"
-                target="_blank"
-                title="Tailwind CSS"
-                class="tech-link"
-            >
-                <Icon name="tabler:brand-tailwind" size={20} />
-            </a>
-            <span>&</span>
-            <a
-                href="https://daisyui.com"
-                target="_blank"
-                title="DaisyUI"
-                class="tech-link"
-            >
-                <Icon name="tabler:flower-filled" size={20} />
-            </a>
-        </div>
+    <div class="tech-stack">
+      <span>Built with</span>
+      <a href="https://astro.build" target="_blank" title="Astro" class="tech-link">
+        <Icon name="tabler:brand-astro" size={20} />
+      </a>
+      <span>&</span>
+      <a href="https://tailwindcss.com" target="_blank" title="Tailwind CSS" class="tech-link">
+        <Icon name="tabler:brand-tailwind" size={20} />
+      </a>
+      <span>&</span>
+      <a href="https://daisyui.com" target="_blank" title="DaisyUI" class="tech-link">
+        <Icon name="tabler:flower-filled" size={20} />
+      </a>
     </div>
+  </div>
 </footer>
 <style>
-    footer {
-        padding: 2em 1em 6em 1em;
-        background: linear-gradient(var(--gray-gradient)) no-repeat;
-        color: rgb(var(--gray));
-        text-align: center;
-    }
+  footer {
+    padding: 2em 1em 6em 1em;
+    background: linear-gradient(var(--gray-gradient)) no-repeat;
+    color: rgb(var(--gray));
+    text-align: center;
+  }
 
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    align-items: center;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+  }
+
+  .social-links a {
+    text-decoration: none;
+    color: rgb(var(--gray));
+    transition: color 0.2s ease;
+  }
+
+  .social-links a:hover {
+    color: rgb(var(--accent));
+  }
+
+  .tech-stack {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.9em;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tech-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    text-decoration: none;
+    color: rgb(var(--gray));
+    transition: color 0.2s ease;
+  }
+
+  .tech-link:hover {
+    color: rgb(var(--accent));
+  }
+
+  @media (max-width: 640px) {
     .footer-content {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5em;
-        align-items: center;
-    }
-
-    .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 1.5em;
-    }
-
-    .social-links a {
-        text-decoration: none;
-        color: rgb(var(--gray));
-        transition: color 0.2s ease;
-    }
-
-    .social-links a:hover {
-        color: rgb(var(--accent));
+      gap: 1em;
     }
 
     .tech-stack {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-        font-size: 0.9em;
-        flex-wrap: wrap;
-        justify-content: center;
+      font-size: 0.8em;
     }
-
-    .tech-link {
-        display: flex;
-        align-items: center;
-        gap: 0.25em;
-        text-decoration: none;
-        color: rgb(var(--gray));
-        transition: color 0.2s ease;
-    }
-
-    .tech-link:hover {
-        color: rgb(var(--accent));
-    }
-
-    @media (max-width: 640px) {
-        .footer-content {
-            gap: 1em;
-        }
-
-        .tech-stack {
-            font-size: 0.8em;
-        }
-    }
+  }
 </style>
