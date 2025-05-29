@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { linkCategories } from "../data/links.ts";
+---
+
+<html>
+<head>
+    <title>Links</title>
+</head>
+<body>
+    <h1>Links</h1>
+    <p>Modern search engines suck, so here's a list of links to resources that I like. I hope you like them too!</p>
+
+    {linkCategories.map((category) => (
+        <div>
+            <h2>{category.name}</h2>
+
+            {category.links && (
+                <ul>
+                    {category.links.map((link) => (
+                        <li>
+                            <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                {link.name}
+                            </a>
+                            <p>{link.description}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {category.subcategories && category.subcategories.map((subcategory) => (
+                <div>
+                    <h3>{subcategory.name}</h3>
+                    <ul>
+                        {subcategory.links.map((link) => (
+                            <li>
+                                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                    {link.name}
+                                </a>
+                                <p>{link.description}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    ))}
+
+    <p>Links open in new tabs. If you have suggestions for additions, feel free to reach out!</p>
+</body>
+</html>
