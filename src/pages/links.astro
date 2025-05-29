@@ -1,51 +1,99 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import WideLayout from "../layouts/WideLayout.astro";
 import { linkCategories } from "../data/links.ts";
+import { Icon } from "astro-icon/components";
 ---
 
-<html>
-<head>
-    <title>Links</title>
-</head>
-<body>
-    <h1>Links</h1>
-    <p>Modern search engines suck, so here's a list of links to resources that I like. I hope you like them too!</p>
-
-    {linkCategories.map((category) => (
-        <div>
-            <h2>{category.name}</h2>
-
-            {category.links && (
-                <ul>
-                    {category.links.map((link) => (
-                        <li>
-                            <a href={link.url} target="_blank" rel="noopener noreferrer">
-                                {link.name}
-                            </a>
-                            <p>{link.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            )}
-
-            {category.subcategories && category.subcategories.map((subcategory) => (
-                <div>
-                    <h3>{subcategory.name}</h3>
-                    <ul>
-                        {subcategory.links.map((link) => (
-                            <li>
-                                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                                    {link.name}
-                                </a>
-                                <p>{link.description}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
+<WideLayout>
+    <div class="w-full max-w-none mx-0">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-4">Links</h1>
+            <p class="text-lg opacity-75 max-w-2xl mx-auto">
+                A curated collection of websites I find useful and interesting.
+            </p>
         </div>
-    ))}
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-6">
+            {
+                linkCategories.map((category) => (
+                    <div class="card bg-base-200 shadow-lg break-inside-avoid mb-6">
+                        {" "}
+                        <div class="card-body">
+                            {" "}
+                            <h2 class="card-title text-primary mb-4">
+                                {" "}
+                                {category.name}{" "}
+                            </h2>{" "}
+                            {category.links && (
+                                <div class="space-y-3">
+                                    {" "}
+                                    {category.links.map((link) => (
+                                        <div class="bg-base-100 p-3 rounded-lg">
+                                            {" "}
+                                            <a
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="link link-primary font-medium block mb-1"
+                                            >
+                                                {link.name}
+                                            </a>
+                                            <p class="text-sm opacity-75">
+                                                {link.description}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {category.subcategories && (
+                                <div class="space-y-4">
+                                    {category.subcategories.map(
+                                        (subcategory) => (
+                                            <div class="bg-base-100 p-4 rounded-lg">
+                                                <h3 class="font-semibold text-secondary mb-3">
+                                                    {subcategory.name}
+                                                </h3>
+                                                <div class="space-y-2">
+                                                    {subcategory.links.map(
+                                                        (link) => (
+                                                            <div class="pl-2 border-l-2 border-base-300">
+                                                                <a
+                                                                    href={
+                                                                        link.url
+                                                                    }
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    class="link link-primary font-medium block"
+                                                                >
+                                                                    {link.name}
+                                                                </a>
+                                                                <p class="text-xs opacity-75 mt-1">
+                                                                    {
+                                                                        link.description
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ),
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
 
-    <p>Links open in new tabs. If you have suggestions for additions, feel free to reach out!</p>
-</body>
-</html>
+        <div class="text-center mt-8">
+            <div class="alert alert-info max-w-lg mx-auto">
+                <Icon name="tabler:info-circle" class="shrink-0 w-6 h-6" />
+                <span
+                    >Links open in new tabs. If you have suggestions for
+                    additions, feel free to reach out!</span
+                >
+            </div>
+        </div>
+    </div>
+</WideLayout>
