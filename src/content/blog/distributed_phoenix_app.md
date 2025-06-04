@@ -169,11 +169,19 @@ This function renders the HEEx template. We define a heading with the name of ou
 
 This function gets called when the LiveView page gets first loaded. We subscribe to the `"messages"` topic and assign an empty `:messages` list and `:input_value` string.
 
-3. `handle_event("update_input", ..., ...)`
+3. The handler for the updated input field:
+
+```elixir
+handle_event("update_input", ..., ...)
+```
 
 This function gets called every time the input field gets updated. We use it to set the `:input_value` value in the socket, which we'll need to broadcast the message.
 
-4. `handle_event("send_message", ..., ...)`
+4. The handler for sending a message:
+
+```elixir
+handle_event("send_message", ..., ...)
+```
 
 This function is triggered when the "Send message" button is clicked. It performs three main actions:
 
@@ -183,7 +191,11 @@ This function is triggered when the "Send message" button is clicked. It perform
 
 We use `broadcast_from!` instead of `broadcast!` to avoid receiving our own message. The `self()` argument ensures the message is sent to everyone except the sender.
 
-5. `handle_info(%Phoenix.Socket.Broadcast{}, ..., ...)`
+5. The handler for the received broadcasted message:
+
+```elixir
+handle_info(%Phoenix.Socket.Broadcast{}, ..., ...)
+```
 
 This function handles incoming messages from the `"messages"` topic. It is triggered for each message broadcast by other nodes, thanks to our subscription in the `mount` function.
 
