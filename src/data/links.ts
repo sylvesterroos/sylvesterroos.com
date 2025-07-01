@@ -22,8 +22,17 @@ export const linkCategories: LinkCategory[] = [
       {
         name: "Elixir",
         url: "https://elixir-lang.org/",
-        description:
-          "The best programming language for creating web APIs, bar none. Builds on top of Erlang, which solved the problem of concurrency and distributed systems all the way back in the 80s",
+        description: `
+          A powerful functional programming language for:
+
+          - Building web APIs ([Phoenix](https://www.phoenixframework.org/))
+          - Interactive web apps ([Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html))
+          - Data processing pipelines ([GenStage](https://hexdocs.pm/gen_stage/GenStage.html))
+          - Embedded systems ([Nerves](https://www.nerves-project.org/))
+          - Machine learning ([Nx](https://github.com/elixir-nx/nx))
+
+          Built on top of Erlang, which solved concurrency and distributed systems all the way back in the 80s.
+`,
       },
     ],
   },

@@ -1,15 +1,54 @@
 ---
 import WideLayout from "../layouts/WideLayout.astro";
 import { linkCategories } from "../data/links.ts";
+import type { Link, Subcategory, LinkCategory } from "../data/links.ts";
 import { Icon } from "astro-icon/components";
+import { markdownToHtml } from "../utils/markdownToHtml.ts";
 
-function parseMarkdownLinks(text: string): string {
-  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  return text.replace(
-    markdownLinkRegex,
-    '<a href="$2" target="_blank" rel="noopener noreferrer" class="link link-primary">$1</a>',
+async function processLink(link: Link): Promise<Link & { htmlDescription: string }> {
+  return {
+    ...link,
+    htmlDescription: await markdownToHtml(link.description),
+  };
+}
+
+async function processLinks(links: Link[]): Promise<(Link & { htmlDescription: string })[]> {
+  return Promise.all(links.map(processLink));
+}
+
+async function processSubcategory(
+  subcategory: Subcategory,
+): Promise<Subcategory & { links: (Link & { htmlDescription: string })[] }> {
+  return {
+    ...subcategory,
+    links: await processLinks(subcategory.links),
+  };
+}
+
+async function processSubcategories(
+  subcategories: Subcategory[],
+): Promise<(Subcategory & { links: (Link & { htmlDescription: string })[] })[]> {
+  return Promise.all(subcategories.map(processSubcategory));
+}
+
+async function processCategories(categories: LinkCategory[]): Promise<
+  (LinkCategory & {
+    links?: (Link & { htmlDescription: string })[];
+    subcategories?: (Subcategory & { links: (Link & { htmlDescription: string })[] })[];
+  })[]
+> {
+  return Promise.all(
+    categories.map(async (category) => ({
+      ...category,
+      links: category.links ? await processLinks(category.links) : undefined,
+      subcategories: category.subcategories
+        ? await processSubcategories(category.subcategories)
+        : undefined,
+    })),
   );
 }
+
+const processedCategories = await processCategories(linkCategories);
 ---
 
 <WideLayout>
@@ -22,18 +61,14 @@ function parseMarkdownLinks(text: string): string {
     </div>
     <div class="columns-1 md:columns-2 lg:columns-3 gap-6">
       {
-        linkCategories.map((category) => (
+        processedCategories.map((category) => (
           <div class="card bg-base-200 shadow-lg break-inside-avoid mb-6">
-            {" "}
             <div class="card-body">
-              {" "}
-              <h2 class="card-title text-primary mb-4"> {category.name} </h2>{" "}
+              <h2 class="card-title text-primary mb-4"> {category.name} </h2>
               {category.links && (
                 <div class="space-y-3">
-                  {" "}
                   {category.links.map((link) => (
                     <div class="bg-base-100 p-3 rounded-lg">
-                      {" "}
                       <a
                         href={link.url}
                         target="_blank"
@@ -42,39 +77,40 @@ function parseMarkdownLinks(text: string): string {
                       >
                         {link.name}
                       </a>
-                      <p
-                        class="text-sm opacity-75"
-                        set:html={parseMarkdownLinks(link.description)}
-                      />
+                      <div class="text-sm opacity-75" set:html={link.htmlDescription} />
                     </div>
                   ))}
                 </div>
               )}
               {category.subcategories && (
                 <div class="space-y-4">
-                  {category.subcategories.map((subcategory) => (
-                    <div class="bg-base-100 p-4 rounded-lg">
-                      <h3 class="font-semibold text-secondary mb-3">{subcategory.name}</h3>
-                      <div class="space-y-2">
-                        {subcategory.links.map((link) => (
-                          <div class="pl-2 border-l-2 border-base-300">
-                            <a
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="link link-primary font-medium block"
-                            >
-                              {link.name}
-                            </a>
-                            <p
-                              class="text-xs opacity-75 mt-1"
-                              set:html={parseMarkdownLinks(link.description)}
-                            />
-                          </div>
-                        ))}
+                  {category.subcategories.map(
+                    (
+                      subcategory: Subcategory & { links: (Link & { htmlDescription: string })[] },
+                    ) => (
+                      <div class="bg-base-100 p-4 rounded-lg">
+                        <h3 class="font-semibold text-secondary mb-3">{subcategory.name}</h3>
+                        <div class="space-y-2">
+                          {subcategory.links.map((link: Link & { htmlDescription: string }) => (
+                            <div class="pl-2 border-l-2 border-base-300">
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="link link-primary font-medium block"
+                              >
+                                {link.name}
+                              </a>
+                              <div
+                                class="text-xs opacity-75 mt-1"
+                                set:html={link.htmlDescription}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               )}
             </div>
