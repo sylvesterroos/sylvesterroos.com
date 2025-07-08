@@ -18,29 +18,42 @@ const today = new Date();
         <span class="sr-only">X</span>
         <Icon name="tabler:brand-x" size={40} />
       </a>
-      <a href="https://gitlab.com/sylvesterroos" target="_blank" title="GitLab">
-        <span class="sr-only">GitLab</span>
-        <Icon name="tabler:brand-gitlab" size={40} />
-      </a>
       <a href="/rss.xml" target="_blank" title="RSS Feed">
         <span class="sr-only">RSS Feed</span>
         <Icon name="tabler:rss" size={40} />
       </a>
     </div>
 
-    <div class="tech-stack">
-      <span>Built with</span>
-      <a href="https://astro.build" target="_blank" title="Astro" class="tech-link">
-        <Icon name="tabler:brand-astro" size={20} />
-      </a>
-      <span>&</span>
-      <a href="https://tailwindcss.com" target="_blank" title="Tailwind CSS" class="tech-link">
-        <Icon name="tabler:brand-tailwind" size={20} />
-      </a>
-      <span>&</span>
-      <a href="https://daisyui.com" target="_blank" title="DaisyUI" class="tech-link">
-        <Icon name="tabler:flower-filled" size={20} />
-      </a>
+    <div
+      class="footer-columns flex flex-col sm:flex-row sm:justify-center sm:items-start gap-4 sm:gap-24"
+    >
+      <div class="tech-stack flex flex-1-0-auto justify-center">
+        <span>Built with</span>
+        <a href="https://astro.build" target="_blank" title="Astro" class="tech-link">
+          <Icon name="tabler:brand-astro" size={20} />
+        </a>
+        <span class="mx-1" aria-hidden="true">·</span>
+        <a href="https://tailwindcss.com" target="_blank" title="Tailwind CSS" class="tech-link">
+          <Icon name="tabler:brand-tailwind" size={20} />
+        </a>
+        <span class="mx-1" aria-hidden="true">·</span>
+        <a href="https://daisyui.com" target="_blank" title="DaisyUI" class="tech-link">
+          <Icon name="tabler:flower-filled" size={20} />
+        </a>
+      </div>
+
+      <div class="flex flex-1-0-auto justify-center">
+        <a
+          href="https://github.com/sylvesterroos/sylvesterroos.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="The Source Code"
+          class="flex flex-row items-center gap-1"
+        >
+          <Icon name="tabler:brand-git" size={20} />
+          <span>The Source Code</span>
+        </a>
+      </div>
     </div>
   </div>
 </footer>
