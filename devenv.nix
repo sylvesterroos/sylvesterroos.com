@@ -7,10 +7,7 @@
 }:
 
 {
-  languages.javascript = {
+  languages.deno = {
     enable = true;
-    bun = {
-      enable = true;
-    };
   };
 }
