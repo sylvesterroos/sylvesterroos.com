@@ -3,17 +3,13 @@ import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
 ---
 
-<header class="mb-8">
-  <nav class="navbar bg-base-100">
-    <div class="flex-1">
-      <a href="/" class="btn btn-ghost text-xl">{SITE_TITLE}</a>
-    </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
-        <li><HeaderLink href="/">Home</HeaderLink></li>
-        <li><HeaderLink href="/blog">Blog</HeaderLink></li>
-        <li><HeaderLink href="/links">Links</HeaderLink></li>
-      </ul>
-    </div>
-  </nav>
+<header class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="logo">{SITE_TITLE}</a>
+    <nav>
+      <HeaderLink href="/">home</HeaderLink>
+      <HeaderLink href="/blog">blog</HeaderLink>
+      <HeaderLink href="/links">links</HeaderLink>
+    </nav>
+  </div>
 </header>

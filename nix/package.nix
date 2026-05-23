@@ -1,21 +1,23 @@
 {
   buildNpmPackage,
   nix-gitignore,
-}:
+}: 
 
-# TODO: how to keep package-lock.json and deno.lock in sync?
 buildNpmPackage {
   pname = "sylvesterroos-com";
   version = "0.1.0";
 
   src = nix-gitignore.gitignoreSource [ ] ../.;
 
-  npmDepsHash = "sha256-xDpnPv6ibP4pEPi/B1GeN7QTcGrMvoMccAFTMFg/lp8=";
+  npmDepsHash = "sha256-4zVCCFp/u9o5/SfrYTr+Dsp2TMBpPOXq0I9r3zLTGSw=";
 
-  # TODO: make this overidable as only the server requires this to prevent SIGILL
+  npmDepsFetcherVersion = 2;
+
+  # Force sharp to use WASI instead of native bindings in the sandbox
   NAPI_RS_FORCE_WASI = "1";
 
-  # TODO: what does this do?
+  # Skip install scripts so native addons (sharp) don't try to compile;
+  # NAPI_RS_FORCE_WASI forces WASI fallback instead
   npmFlags = [ "--ignore-scripts" ];
 
   buildPhase = ''

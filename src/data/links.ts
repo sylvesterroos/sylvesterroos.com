@@ -24,13 +24,13 @@ export const linkCategories: LinkCategory[] = [
         url: "https://elixir-lang.org/",
         description: `
           A powerful functional programming language for:
-
-          - Building web APIs ([Phoenix](https://www.phoenixframework.org/))
-          - Interactive web apps ([Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html))
-          - Data processing pipelines ([GenStage](https://hexdocs.pm/gen_stage/GenStage.html))
-          - Embedded systems ([Nerves](https://www.nerves-project.org/))
-          - Machine learning ([Nx](https://github.com/elixir-nx/nx))
-
+          <ul>
+            <li>Building web APIs (<a href="https://www.phoenixframework.org/">Phoenix</a>)</li>
+            <li>Interactive web apps (<a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">Phoenix LiveView</a>)</li>
+            <li>Data processing pipelines (<a href="https://hexdocs.pm/gen_stage/GenStage.html">GenStage</a>)</li>
+            <li>Embedded systems (<a href="https://www.nerves-project.org/">Nerves</a>)</li>
+            <li>Machine learning (<a href="https://github.com/elixir-nx/nx">Nx</a>)</li>
+          </ul>
           Built on top of Erlang, which solved concurrency and distributed systems all the way back in the 80s.
 `,
       },
@@ -49,12 +49,6 @@ export const linkCategories: LinkCategory[] = [
         name: "Neovim",
         url: "https://neovim.io/",
         description: "The One True Text Editor",
-      },
-      {
-        name: "kickstart.nvim",
-        url: "https://github.com/nvim-lua/kickstart.nvim",
-        description:
-          "A starting point for your Neovim configuration. While Neovim is powerful, initial setup can be challenging. kickstart.nvim provides a solid foundation, offering more than just basic functionality to help you get started quickly",
       },
     ],
   },
@@ -184,7 +178,7 @@ export const linkCategories: LinkCategory[] = [
         name: "Mozilla's 'Privacy Not Included'",
         url: "https://foundation.mozilla.org/en/privacynotincluded/",
         description:
-          "Product reviews in regards to privacy. Did you know that [employees of Amazon Ring were caught spying on female customers?](https://www.malwarebytes.com/blog/news/2023/06/amazons-ring-camera-used-to-spy-on-customers)",
+          'Product reviews in regards to privacy. Did you know that <a href="https://www.malwarebytes.com/blog/news/2023/06/amazons-ring-camera-used-to-spy-on-customers">employees of Amazon Ring were caught spying on female customers?</a>',
       },
       {
         name: "Monero",

@@ -3,139 +3,143 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Heading = { depth: number; slug: string; text: string };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<"blog">["data"] & {
+  headings?: Heading[];
+  prev?: { id: string; data: CollectionEntry<"blog">["data"] };
+  next?: { id: string; data: CollectionEntry<"blog">["data"] };
+};
 
-// Prose styling configuration
-const proseBase = "prose-xl";
-const headingStyles = "prose-headings:font-bold";
-const linkStyles = "prose-a:link prose-a:link-primary";
-const listStyles =
-  "prose-ul:list-disc prose-ul:list-outside prose-ol:list-decimal prose-ol:list-outside";
-const blockquoteStyles =
-  "prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4";
-const inlineCodeStyle =
-  "prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-base-200";
-const inlineCode_CodeBlockReset = "prose-pre:prose-code:bg-transparent prose-pre:prose-code:p-0";
-
-const proseClasses = [
-  proseBase,
-  headingStyles,
-  linkStyles,
-  listStyles,
-  blockquoteStyles,
-  inlineCodeStyle,
-  inlineCode_CodeBlockReset,
-].join(" ");
+const { title, description, pubDate, updatedDate, heroImage, heroCaption, tags, headings, prev, next } = Astro.props;
 ---
 
-<BaseLayout>
-  <article class="w-full max-w-full m-0">
-    <div class="w-full">
-      {
-        heroImage && (
-          <img
-            width={1020}
-            height={510}
-            src={heroImage}
-            alt=""
-            class="block mx-auto rounded-xl shadow-lg"
-          />
-        )
-      }
+<BaseLayout title={title} description={description}>
+  <article>
+    <div class="section article-header">
+      <div class="container">
+        {
+          tags && tags.length > 0 && (
+            <div class="meta-row" style="margin-bottom: var(--gap-md);">
+              <span class="pill pill-accent">{tags[0]}</span>
+              {tags.slice(1).map((tag) => <span class="pill pill-accent">{tag}</span>)}
+              <span class="sep">·</span>
+              <span class="meta-date"><FormattedDate date={pubDate} /></span>
+            </div>
+          )
+        }
+        {
+          (!tags || tags.length === 0) && (
+            <div class="meta-row" style="margin-bottom: var(--gap-md);">
+              <span class="meta-date"><FormattedDate date={pubDate} /></span>
+            </div>
+          )
+        }
+        {
+          updatedDate && (
+            <div class="meta-row" style="margin-bottom: var(--gap-md);">
+              <span class="meta-date">Updated <FormattedDate date={updatedDate} /></span>
+            </div>
+          )
+        }
+        <h1>
+          <span class="accent">/</span> {title}
+        </h1>
+        {
+          description && (
+            <p class="lead">{description}</p>
+          )
+        }
+      </div>
     </div>
-    <!-- class="prose w-[720px] max-w-[calc(100%-2em)] mx-auto p-4 text-gray-800" -->
-    <div class={proseClasses}>
-      <div class="mb-4 py-4 text-center leading-none">
-        <div class="mb-2 text-base-content/70">
-          <FormattedDate date={pubDate} />
+
+    <div class="section">
+      <div class="container">
+        {
+          heroImage && (
+            <div class="article-hero">
+              <img src={heroImage.src} alt="" />
+              {heroCaption && <div class="caption">{heroCaption}</div>}
+            </div>
+          )
+        }
+
+        <div class="article-layout">
+          <div class="prose">
+            <slot />
+          </div>
           {
-            updatedDate && (
-              <div class="italic">
-                Last updated on <FormattedDate date={updatedDate} />
-              </div>
+            headings && headings.length > 0 && (
+              <nav class="toc" aria-label="Table of contents">
+                <div class="toc-label">Contents</div>
+                <ol>
+                  {headings
+                    .filter((h) => h.depth <= 3)
+                    .map((h) => (
+                      <li style={`padding-left: ${(h.depth - 1) * 12}px;`}>
+                        <a href={`#${h.slug}`}>{h.text}</a>
+                      </li>
+                    ))}
+                </ol>
+              </nav>
             )
           }
         </div>
-        <h1 class="mb-2">{title}</h1>
-        <hr />
       </div>
-      <slot />
     </div>
   </article>
+
+  {
+    (prev || next) && (
+      <div class="section">
+        <div class="container">
+          <nav class="post-nav">
+            {prev ? (
+              <a href={`/blog/${prev.id}/`}>
+                <span class="nav-label">Previous</span>
+                <span class="nav-title">{prev.data.title}</span>
+              </a>
+            ) : <div />}
+            {next ? (
+              <a href={`/blog/${next.id}/`} class="next">
+                <span class="nav-label">Next</span>
+                <span class="nav-title">{next.data.title}</span>
+              </a>
+            ) : <div />}
+          </nav>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    headings && headings.length > 0 && (
+      <script>
+        (function () {
+          const headings = document.querySelectorAll('.prose [id]');
+          const links = document.querySelectorAll('.toc a');
+          if (!headings.length || !links.length) return;
+
+          function setActive(id) {
+            links.forEach(function (l) {
+              l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+            });
+          }
+
+          function onScroll() {
+            let current = headings[0].id;
+            const offset = 100;
+            for (let i = 0; i < headings.length; i++) {
+              const rect = headings[i].getBoundingClientRect();
+              if (rect.top <= offset) current = headings[i].id;
+            }
+            setActive(current);
+          }
+
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
+        })();
+      </script>
+    )
+  }
 </BaseLayout>
-
-<!-- <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
-
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html> -->

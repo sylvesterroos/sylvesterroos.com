@@ -1,40 +1,130 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import { getPublishedBlogPosts } from "../utils/collections.ts";
+
+const allPosts = await getPublishedBlogPosts();
+const posts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const postCount = allPosts.length;
 ---
 
 <BaseLayout>
-  <h1 class="text-6xl font-bold mb-8">Sylvester Roos</h1>
-  <p class="mb-8 text-lg">
-    I'm a software developer interested in building large scale distributed systems on the BEAM.
-  </p>
-  <p class="mb-8">
-    My stuff is scattered around
-    <a
-      class="link link-primary"
-      href="https://github.com/sylvesterroos"
-      target="_blank"
-      rel="noopener noreferrer">GitHub</a
-    >
-    and
-    <a
-      class="link link-primary"
-      href="https://gitlab.com/sylvesterroos/"
-      target="_blank"
-      rel="noopener noreferrer">GitLab</a
-    >.
-  </p>
-  <p class="mb-8">
-    If you want to chat, you can send an email to <i>hello at sylvesterroos dot com</i> or <a
-      class="link link-primary"
-      href="https://x.com/sylvesterroos"
-      target="_blank"
-      rel="noopener noreferrer">message me on x.com</a
-    >.
-  </p>
+  <section class="section hero" data-od-id="hero">
+    <div class="container hero-left">
+      <h1><span class="accent">Sylvester Roos</span></h1>
+      <p class="lead" style="margin-top: var(--gap-md);">
+        I'm a software developer interested in building large scale distributed systems on the BEAM.
+      </p>
+      <p style="margin-top: var(--gap-md);">
+        My stuff is scattered around <a href="https://github.com/sylvesterroos">GitHub</a> and <a
+          href="https://gitlab.com/sylvesterroos">GitLab</a
+        >.
+      </p>
+      <p style="margin-top: var(--gap-sm);">
+        If you want to chat, you can send an email to <a href="mailto:hello@sylvesterroos.com"
+          >hello at sylvesterroos dot com</a
+        > or message me on <a href="https://x.com/sylvesterroos">x.com</a>.
+      </p>
+      <div class="hero-cta" style="margin-top: var(--gap-lg);">
+        <a href="/blog" class="btn btn-primary">Read the posts</a>
+        <a href="/links" class="btn btn-secondary">Interesting things</a>
+      </div>
+      <div class="counter-row" style="margin-top: 40px;">
+        <span><span class="label">POSTS</span> <span class="val">{postCount}</span></span>
+      </div>
+    </div>
+  </section>
 
-  <div style="padding-top: 60%; position: relative;">
-    <iframe
-      src="https://configure.zsa.io/embed/voyager/layouts/Aq0LZ/latest/0"
-      style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%"></iframe>
-  </div>
+  {
+    posts.length > 0 && (
+      <section class="section" data-od-id="featured">
+        <div class="container">
+          <div class="row-between" style="margin-bottom: var(--gap-lg);">
+            <h2>
+              <span class="accent">/</span> recent posts
+            </h2>
+            <a href="/blog" class="btn btn-ghost btn-arrow">
+              View all
+            </a>
+          </div>
+          <div>
+            {posts.map((post) => (
+              <article class={`blog-card${!post.data.heroImage ? " no-thumb" : ""}`}>
+                {post.data.heroImage && (
+                  <div class="thumb">
+                    <img src={post.data.heroImage.src} alt="" />
+                  </div>
+                )}
+                <div class="info">
+                  <h3>
+                    <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                  </h3>
+                  <p class="dek">{post.data.description}</p>
+                  <div class="foot">
+                    <span class="meta">
+                      <FormattedDate date={post.data.pubDate} />
+                    </span>
+                    {post.data.tags &&
+                      post.data.tags.map((tag: string) => (
+                        <span class="pill pill-accent">{tag}</span>
+                      ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" data-od-id="nodes">
+    <div class="container">
+      <p class="seed-line" style="margin-bottom: var(--gap-md);">links</p>
+      <div class="nodes-grid">
+        <a
+          href="https://github.com/sylvesterroos"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="node-link"
+        >
+          <span>GitHub</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a
+          href="https://x.com/sylvesterroos"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="node-link"
+        >
+          <span>X</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a
+          href="https://gitlab.com/sylvesterroos"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="node-link"
+        >
+          <span>GitLab</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="mailto:hello@sylvesterroos.com" class="node-link">
+          <span>Email</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="/rss.xml" class="node-link">
+          <span>RSS feed</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="/links" class="node-link">
+          <span>Links</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>

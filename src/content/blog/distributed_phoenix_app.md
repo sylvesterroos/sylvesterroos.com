@@ -2,7 +2,7 @@
 title: Building a simple distributed Phoenix application
 description: Learn how to create a distributed Phoenix application with LiveView and clustering. This tutorial covers broadcasting messages across multiple nodes using Phoenix PubSub and libcluster.
 pubDate: "2024-07-04 14:40:00"
-heroImage: "/blog/distributed-phoenix-app/distributed-phoenix-app.avif"
+tags: ["elixir"]
 draft: false
 ---
 

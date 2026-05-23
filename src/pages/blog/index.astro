@@ -6,137 +6,63 @@ import { getPublishedBlogPosts } from "../../utils/collections.ts";
 const posts = (await getPublishedBlogPosts()).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const postsByYear: Record<number, typeof posts> = {};
+for (const post of posts) {
+  const year = post.data.pubDate.getFullYear();
+  if (!postsByYear[year]) postsByYear[year] = [];
+  postsByYear[year].push(post);
+}
+const years = Object.keys(postsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
 ---
 
 <BaseLayout>
-  <section>
-    <ul class="flex flex-wrap gap-8 list-none m-0 p-0">
+  <section class="section">
+    <div class="container">
+      <p class="seed-line">all posts</p>
+      <h1><span class="accent">/</span> blog</h1>
+      <p class="lead" style="margin-top: var(--gap-md);">
+        Long-form writing on machine learning, systems design, and the shape of tools that think.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
       {
-        posts.map((post) => (
-          <li class="w-[calc(50%-1rem)] first:w-full first:mb-4 first:text-center first:place-items-center">
-            <a href={`/blog/${post.id}/`} class="block">
-              <img
-                width={720}
-                height={360}
-                src={post.data.heroImage}
-                alt=""
-                class="mb-2 rounded-xl"
-              />
-              <h4 class="text-2xl m-0 text-base-content">{post.data.title}</h4>
-              <p class="m-0 text-base-content/70">
-                <FormattedDate date={post.data.pubDate} />
-              </p>
-            </a>
-          </li>
-        ))
+        posts.length === 0 ? (
+          <p class="lead" style="text-align: center;">No posts yet. Check back soon.</p>
+        ) : (
+          <div class="blog-list">
+            {years.map((year) => (
+              <>
+                <p class="year-header">{year}</p>
+                {postsByYear[year].map((post) => (
+                  <article class={`blog-item${!post.data.heroImage ? ' no-thumb' : ''}`}>
+                    {post.data.heroImage && (
+                      <div class="thumb">
+                        <img src={post.data.heroImage.src} alt="" />
+                      </div>
+                    )}
+                    <div class="info">
+                      <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+                      <p class="dek">{post.data.description}</p>
+                      <div class="foot">
+                        <span class="meta-date"><FormattedDate date={post.data.pubDate} /></span>
+                        {post.data.tags && post.data.tags.map((tag: string) => (
+                          <span class="pill pill-accent">{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </>
+            ))}
+          </div>
+        )
       }
-    </ul>
-    {
-      posts.length === 0 && (
-        <div class="text-center py-12">
-          <h2 class="text-2xl mb-4 text-base-content">No posts yet</h2>
-          <p class="text-base-content">Check back soon for something new!</p>
-        </div>
-      )
-    }
+    </div>
   </section>
 </BaseLayout>
-
-<!-- <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html> -->
