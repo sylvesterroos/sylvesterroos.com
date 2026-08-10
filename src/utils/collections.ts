@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 
 export async function getPublishedBlogPosts() {
-  return await getCollection("blog", ({ data }) => !data.draft);
+  const filterDrafts = import.meta.env.PROD;
+  return await getCollection("blog", ({ data }) => filterDrafts ? !data.draft : true);
 }
