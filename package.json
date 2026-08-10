@@ -15,18 +15,25 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",
-    "@astrojs/rss": "^4.0.18",
-    "@astrojs/sitemap": "^3.7.2",
-    "astro": "^6.3.7",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.8",
     "astro-icon": "^1.1.5",
-    "sharp": "^0.34.3"
+    "katex": "^0.16.47",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@iconify-json/tabler": "^1.2.18",
-    "prettier": "^3.5.3",
+    "@iconify-json/tabler": "^1.2.38",
+    "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1"
   },
   "overrides": {
     "vite": "^7"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "sharp@0.34.5": true
   }
 }
