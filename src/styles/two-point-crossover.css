@@ -1,0 +1,96 @@
+/* Shared styling for the TwoPointCrossover widget (blog post + MDX editor). */
+.crossover {
+  --co-p1: color-mix(in oklab, var(--accent) 62%, var(--muted));
+  --co-p2: #7d94ad;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 24px 0;
+  font-family: var(--font-mono);
+}
+.co-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.co-label {
+  flex: 0 0 64px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.co-label-p1 {
+  color: var(--co-p1);
+}
+.co-label-p2 {
+  color: var(--co-p2);
+}
+.co-genes {
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  white-space: pre-wrap;
+  min-height: 24px;
+}
+.co-char-p1 {
+  color: var(--co-p1);
+}
+.co-char-p2 {
+  color: var(--co-p2);
+}
+.co-cut {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  margin: 0 4px;
+  vertical-align: middle;
+  background: var(--border);
+}
+.co-arrow {
+  color: var(--muted);
+  font-size: 13px;
+}
+.co-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.co-slider-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.co-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+}
+.co-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.co-btn {
+  background: var(--surface-bright);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+.co-btn:hover {
+  background: var(--border);
+}

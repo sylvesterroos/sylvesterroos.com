@@ -1,0 +1,197 @@
+---
+title: Evolving a string with a genetic algorithm
+description: Breeding random bytes into the One Ring poem using Petri, an Elixir library for genetic algorithms.
+pubDate: 2026-08-13
+tags:
+  - elixir
+  - genetic-algorithms
+draft: true
+---
+
+import Aside from "../../components/Aside.astro";
+import TwoPointCrossover from "../../components/TwoPointCrossover.astro";
+import StringEvolution from "../../components/StringEvolution.astro";
+
+## Why?
+
+I first ran into genetic algorithms in my minor in artificial intelligence in college. I don't exactly know why I found them so interesting, probably because they're not based on math per se, and instead draw inspiration from how nature solves problems.
+
+About a year and a half later I started working on [Petri](https://github.com/sylvesterroos/petri), a genetic algorithm library for Elixir. The first thing I wanted was a demo where you could see the algorithm working, something that shows the population improving frame by frame. That's why I evolved a string. Specifically, the inscription from the One Ring:
+
+> One Ring to rule them all, One Ring to find them, One Ring to bring them all, and in the darkness bind them
+
+## What's a genetic algorithm?
+
+A GA (genetic algorithm) works like natural selection. Generate a population of candidate solutions, score them with a fitness function, pick the best, cross them to create new child candidates, mutate a few to explore other possibilities, and repeat this process for many generations. The result is rarely optimal, but it gets a good solution while brute force is just getting started.
+
+Our string is 107 characters long. Each position can be any of 256 bytes. That gives a total of $256^{107}$ possible strings, which in scientific notation is about $10^{257}$. For comparison, there are roughly $10^{80}$ atoms in the observable universe. If you checked a trillion strings per second, you would be waiting about $10^{238}$ years in the worst case. Let me know how the universe ends.
+
+<Aside>
+
+$10^{80}$ written out looks like this:
+
+```
+100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000
+```
+
+That is, one hundred quinvigintillion.
+
+</Aside>
+
+GAs shine when the search space is vast, good solutions are sparse, and you can score a candidate but you can't derive one directly. Our string problem fits this case: a mostly flat fitness landscape with rare peaks. Random search (brute forcing) never lands on a good solution, and gradient descent based methods have no slope to follow. GAs also work well when the problem has a modular structure, where the solutions are built from smaller pieces that can be mixed and matched.
+
+In short, a GA gives you a good answer fast, not provably the best one.
+
+## Encoding your problem
+
+A GA doesn't know about strings. Instead, it knows about chromosomes: lists of values called genes that crossover can slice and mutation can tweak. The first decision in any GA is how to map your problem onto that structure.
+
+For a string, the obvious mapping is one gene per character. Each gene is a byte in the range of 0 to 255, matching the ASCII range. Petri (and everyone else from what I can tell) calls this the integer encoding. A chromosome can look like this:
+
+```elixir
+%Petri.Chromosome.Integer{
+  genes: [79, 110, 101, 32, 82, 105, 110, 103]
+}
+```
+
+Decode it and `79` becomes `O`, `110` becomes `n`, `101` becomes `e`. The string is 107 characters long, so the chromosome is always exactly 107 genes. Petri's integer encoding needs per-gene bounds, and every gene gets the same range:
+
+```elixir
+bounds: List.duplicate({0, 255}, 107)
+```
+
+The entire encoding is just bytes in a list, with bounds to let Petri know about the range of the integers.
+
+You could also use the binary encoding. One byte is eight bits, so a 107-character string becomes a 856-bit chromosome. It's the same information, but more genes to mutate, and more positions for crossover to land at. The integer encoding is simpler because each gene is already the thing you care about: a character value.
+
+## The fitness function
+
+To measure the quality of a chromosome, you need a fitness function. A fitness function is essentially a scoring system; higher scores indicate better solutions.
+
+The obvious fitness function for our string problem counts matching characters:
+
+```elixir
+character_score =
+  string
+  |> Enum.zip(target_chars)
+  |> Enum.count(fn {a, b} -> a == b end)
+```
+
+107 characters, 107 possible points to be scored. Simple, and pretty useless on its own.
+
+The problem is that per-character scoring makes every position independent, and that's not how sentences work. The above fitness function doesn't care about the relations between characters. A correct character at position 1 (`"O"`) scores the same whether position 2 holds the correct `"n"` or a random different character. The population evolves as a bunch of random searches, slowly drifting to the target with no awareness of its neighbors.
+
+To fix this, we can use bigrams, which are overlapping pairs of adjacent characters.
+
+```elixir
+bigram_score =
+  string
+  |> bigrams()
+  |> Enum.zip(target_bigrams)
+  |> Enum.count(fn {a, b} -> a == b end)
+```
+
+A correct `"O"` at position 1 followed by a correct `"n"` at position 2 now scores extra! Selection now has a reason to keep fragments together.
+
+The fitness function is `character_score + 2 * bigram_score`, giving the bigrams twice the weight of a character match.
+
+Now, to be fair, the fitness function is leaky; we grade the string to what we know the answer is. In a real world problem you won't know what the answer is, you just know that if you wrote a good fitness function, you want the chromosomes with the highest fitness.
+
+## The operators
+
+Each encoding in Petri comes with its own set of selection-, crossover- and mutation operators. Here is what I picked for our string problem, and why.
+
+For the selection strategy I chose tournament selection. It picks five chromosomes at random and keeps the fittest, and repeats this `population_size` times. It is less aggressive than always taking the absolute best, which would kill diversity quickly, and less loose than picking uniformly, which barely improves at all. Size 5 in a population of 200 individuals gives the stronger individuals a clear advantage without making the selection almost deterministic.
+
+For the crossover strategy I chose two-point crossover. It cuts both parents at two positions and swaps the middle segment.
+
+This is the shuffling of the fragments in action. Drag the handles to see how the parents will be combined into children.
+
+<TwoPointCrossover />
+
+Petri's integer encoding also has a single-point crossover, which cuts just once. Both would likely yield similar results, but feel free to verify this.
+
+For the mutation strategy I chose uniform mutation. It rolls a die for every gene independently, if it hits, it mutates the gene. In our case it replaces the gene with a random value between 0 and 255. At a 2% rate, a typical 107-gene chromosome sees about two mutations per generation. It's enough to explore, but not enough to wreck good fragments that took hundreds of generations to assemble.
+
+I also keep one elite: the single best chromosome which is copied into the next generation unchanged. One is enough to anchor the population, more than one would quickly cause the elites to start dominating before the search has found anything interesting.
+
+## Wiring it up
+
+Here is everything and then some from the section above, now as config keys:
+
+```elixir
+config = [
+  encoding: :integer,
+  bounds: List.duplicate({0, 255}, n),
+  population_size: 200,
+  max_generations: 10_000,
+  selection: :tournament,
+  tournament_size: 5,
+  crossover: :two_point,
+  crossover_rate: 0.9,
+  mutation: :uniform,
+  mutation_per_gene_rate: 0.02,
+  mutation_rate: 1.0,
+  elite_count: 1,
+  fitness_threshold: max_fitness * 1.0,
+  parallel: true,
+  parallel_max_concurrency: System.schedulers_online() * 2,
+  seed: 9
+]
+```
+
+Most of this should look familiar, and the rest I will briefly explain.
+
+Population size and generation count are just guesses on my part. I pick them, watch the run, and adjust if I feel the need. There is no formula, so picking correct values will probably come from experience.
+
+The threshold we do know for sure. `max_fitness` is 107 character points plus 2 times 106 bigram points = 319, and the fitness function can’t score higher. So `fitness_threshold: max_fitness * 1.0` means "stop when you’ve got it right." I multiply by `1.0` because `fitness_threshold` expects a float, and in Elixir multiplying an integer with a float yields a float.
+
+The evaluations run in parallel due to `parallel: true` (which is the default). Each chromosome is scored independently, so Petri can score them concurrently instead of one at a time. Because we're in Elixir we can also take full advantage of the concurrency capabilities of the BEAM. The max concurrency value is set to `System.schedulers_online() * 2`, which allows two tasks per BEAM scheduler, a decent baseline for keeping all cores busy. This value can probably be tuned way higher, but it serves the purpose of showing Petri's capabilities.
+
+Finally we set the seed. A GA pulls from the RNG constantly. Petri seeds that generator once at the start of the run, so the same seed replays the same run. Different seeds start from different random populations, and those populations converge at different speeds. I chose `9` because of the 9 members of the fellowship. Cute, right?
+
+## Watching it evolve
+
+Now that we have our config, let's actually run the algorithm!
+
+```elixir
+result = Petri.run(fitness, config)
+
+result #=> %Petri.Result{
+  best: {%Petri.Chromosome.Integer{
+     # As you can see, our list of integers directly translates to a charlist with our target string :)
+     genes: ~c"One Ring to rule them all, One Ring to find them, One Ring to bring them all, and in the darkness bind them",
+     bounds: [
+       # ...
+     ]
+   }, 319},
+  history: [
+    # ...
+  ],
+  generations_run: 2030,
+  evaluations: 404170
+}
+```
+
+If you click the play button you can view the evolution in action. The characters in red are printable ASCII characters which are not correct for the position they're in. The characters in orange are printable ASCII characters which _are_ in the correct position. And finally the dots are non-printable ASCII characters (line feeds, NUL, tabs, et cetera).
+
+<StringEvolution />
+
+The first half of the run contains about 90% of the progress, with the last 10% requiring the other half of the run.
+
+At the beginning, the population is still very diverse. This means that crossover has lots of possibilities for combining the building blocks into something new; new generations quickly unlock new matches. Once the string approaches the target, the population becomes less diverse, meaning that crossover generally keeps combining the same parts, and that means that we're dependent on random mutation to unlock the extra fitness.
+
+Fitness comes in bursts because new combinations suddenly unlock new bigrams, which are worth more. Then finally, once the string starts to approach the target, most bigrams are unlocked and we're left with random mutation to unlock the remains of the fitness.
+
+<Aside>
+  The full example is in the [repo](https://github.com/sylvesterroos/petri/blob/master/examples),
+  alongside a whole folder of others.
+</Aside>
+
+## A silly but useful example
+
+I still don't exactly know why I find them so interesting, but watching random bytes evolve into the inscription is as close as I'm gonna get to an explanation.
+
+Sure, I can't think of any reason you would actually want to evolve a string, but we got 90% of the way there in 15 seconds; the last 10% took another 15.<br />Well before the heat death of the universe.
+
+Shoot me a message if you make something cool! :)

@@ -1,0 +1,25 @@
+---
+import "../styles/string-evolution.css";
+const dataUrl = "/blog/evolving-a-string/history.json";
+---
+
+<div id="string-evolution" class="string-evolution" data-url={dataUrl}>
+  <div class="evo-display">
+    <div id="evo-string" class="evo-string">loading...</div>
+    <div class="evo-bar-track">
+      <div id="evo-bar" class="evo-bar-fill"></div>
+    </div>
+    <div id="evo-fitness" class="evo-fitness"></div>
+  </div>
+  <div class="evo-controls">
+    <button id="evo-play" class="evo-btn" aria-label="Play">▶</button>
+    <input type="range" id="evo-slider" class="evo-slider" min="0" max="199" value="0" />
+    <span id="evo-info" class="evo-info"></span>
+  </div>
+</div>
+
+<script>
+  import { mountStringEvolution } from "../lib/string-evolution";
+  const root = document.getElementById("string-evolution");
+  if (root) mountStringEvolution(root);
+</script>

@@ -1,0 +1,102 @@
+/* Shared styling for the StringEvolution widget. Imported by the Astro
+ * component (for the blog post) and by the MDX editor wrapper, so the
+ * widget looks identical in both places. */
+.string-evolution {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 24px 0;
+  font-family: var(--font-mono);
+}
+.evo-display {
+  margin-bottom: 16px;
+}
+.evo-string {
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre;
+  min-height: 60px;
+  letter-spacing: 1px;
+}
+.evo-string span.correct {
+  color: var(--accent);
+}
+.evo-string span.wrong {
+  color: color-mix(in oklab, var(--danger) 70%, var(--bg));
+}
+.evo-string span.unprint {
+  color: var(--muted);
+  /* The dot is tiny at body size, but growing its font-size would double its
+     layout width and push lines off-screen (line wrapping is measured at
+     13px). Scale it visually instead: the box stays 13px wide, the glyph
+     renders 2x. */
+  display: inline-block;
+  transform: scale(2);
+  line-height: 1;
+}
+.evo-bar-track {
+  margin-top: 12px;
+  height: 6px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.evo-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  transition: width 0.1s linear;
+  width: 0%;
+}
+.evo-fitness {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.evo-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.evo-btn {
+  background: var(--surface-bright);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.evo-btn:hover {
+  background: var(--border);
+}
+.evo-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+}
+.evo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.evo-info {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

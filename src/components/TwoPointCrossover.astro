@@ -1,0 +1,41 @@
+---
+import "../styles/two-point-crossover.css";
+---
+
+<div id="two-point-crossover" class="crossover">
+  <div class="co-row">
+    <span class="co-label co-label-p1">parent 1</span>
+    <span class="co-genes" data-row="p1"></span>
+  </div>
+  <div class="co-row">
+    <span class="co-label co-label-p2">parent 2</span>
+    <span class="co-genes" data-row="p2"></span>
+  </div>
+  <div class="co-row">
+    <span class="co-label"></span>
+    <span class="co-arrow">↓</span>
+  </div>
+  <div class="co-row">
+    <span class="co-label">child 1</span>
+    <span class="co-genes" data-row="c1"></span>
+  </div>
+  <div class="co-row">
+    <span class="co-label">child 2</span>
+    <span class="co-genes" data-row="c2"></span>
+  </div>
+  <div class="co-controls">
+    <label class="co-slider-label"
+      >cut 1 <input type="range" class="co-slider" data-cut="1" /></label
+    >
+    <label class="co-slider-label"
+      >cut 2 <input type="range" class="co-slider" data-cut="2" /></label
+    >
+    <button type="button" class="co-btn" data-shuffle>new parents</button>
+  </div>
+</div>
+
+<script>
+  import { mountTwoPointCrossover } from "../lib/two-point-crossover";
+  const root = document.getElementById("two-point-crossover");
+  if (root) mountTwoPointCrossover(root);
+</script>
