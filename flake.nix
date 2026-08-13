@@ -2,6 +2,7 @@
   description = "sylvesterroos.com";
 
   inputs = {
+    self.lfs = true;
     nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
     flake-parts.url = "github:hercules-ci/flake-parts";
     devenv.url = "github:cachix/devenv";
