@@ -9,7 +9,7 @@ buildNpmPackage {
 
   src = nix-gitignore.gitignoreSource [ ] ../.;
 
-  npmDepsHash = "sha256-4zVCCFp/u9o5/SfrYTr+Dsp2TMBpPOXq0I9r3zLTGSw=";
+  npmDepsHash = "sha256-hpvqojYn6SvdySW+9ToRKP7jjdVCyqIAkQMUt5S8bXw=";
 
   npmDepsFetcherVersion = 2;
 
