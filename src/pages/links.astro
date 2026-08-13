@@ -10,8 +10,7 @@ const sidebarSections = linkCategories.map((cat, i) => ({
 
 const totalLinks = linkCategories.reduce((acc, cat) => {
   const dirLinks = cat.links?.length || 0;
-  const subLinks =
-    cat.subcategories?.reduce((s, sub) => s + sub.links.length, 0) || 0;
+  const subLinks = cat.subcategories?.reduce((s, sub) => s + sub.links.length, 0) || 0;
   return acc + dirLinks + subLinks;
 }, 0);
 ---
@@ -33,59 +32,86 @@ const totalLinks = linkCategories.reduce((acc, cat) => {
         <aside class="directory-sidebar">
           <div class="nav-label">Sections</div>
           <ul>
-            {sidebarSections.map((section, i) => (
-              <li><a href={`#${section.id}`} class:list={[{ active: i === 0 }]}>{section.name}</a></li>
-            ))}
+            {
+              sidebarSections.map((section, i) => (
+                <li>
+                  <a href={`#${section.id}`} class:list={[{ active: i === 0 }]}>
+                    {section.name}
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </aside>
 
         <div class="directory-content">
-          {linkCategories.map((category, i) => (
-            <div class="dir-section" id={category.name.toLowerCase().replace(/\s+/g, "-")}>
-              <div class="dir-section-header">
-                <h2><span class="section-num">{String(i + 1).padStart(2, "0")}</span> {category.name}</h2>
-              </div>
-              {category.links && (
-                <ul class="link-list">
-                  {category.links.map((link) => (
-                    <li>
-                      <a href={link.url} target="_blank" rel="noopener noreferrer">
-                        <span class="link-text">{link.name}</span>
-                      </a>
-                      <div class="section-desc" style="margin-top: 4px;" set:html={link.description} />
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {category.subcategories && (
-                <div>
-                  {category.subcategories.map((subcategory) => (
-                    <div style="margin-top: var(--gap-md);">
-                      <h3 style="font-size: 14px; font-weight: 500; color: var(--fg); margin-bottom: var(--gap-sm);">{subcategory.name}</h3>
-                      <ul class="link-list">
-                        {subcategory.links.map((link) => (
-                          <li>
-                            <a href={link.url} target="_blank" rel="noopener noreferrer">
-                              <span class="link-text">{link.name}</span>
-                            </a>
-                            <div class="section-desc" style="margin-top: 4px;" set:html={link.description} />
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+          {
+            linkCategories.map((category, i) => (
+              <div class="dir-section" id={category.name.toLowerCase().replace(/\s+/g, "-")}>
+                <div class="dir-section-header">
+                  <h2>
+                    <span class="section-num">{String(i + 1).padStart(2, "0")}</span>{" "}
+                    {category.name}
+                  </h2>
                 </div>
-              )}
-            </div>
-          ))}
+                {category.links && (
+                  <ul class="link-list">
+                    {category.links.map((link) => (
+                      <li>
+                        <a href={link.url} target="_blank" rel="noopener noreferrer">
+                          <span class="link-text">{link.name}</span>
+                        </a>
+                        <div
+                          class="section-desc"
+                          style="margin-top: 4px;"
+                          set:html={link.description}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {category.subcategories && (
+                  <div>
+                    {category.subcategories.map((subcategory) => (
+                      <div style="margin-top: var(--gap-md);">
+                        <h3 style="font-size: 14px; font-weight: 500; color: var(--fg); margin-bottom: var(--gap-sm);">
+                          {subcategory.name}
+                        </h3>
+                        <ul class="link-list">
+                          {subcategory.links.map((link) => (
+                            <li>
+                              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                <span class="link-text">{link.name}</span>
+                              </a>
+                              <div
+                                class="section-desc"
+                                style="margin-top: 4px;"
+                                set:html={link.description}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          }
 
           <div class="dir-section" style="border-bottom: none;">
             <div class="dir-section-header">
               <h2><span class="section-num">00</span> Stats</h2>
             </div>
             <div class="stat-row">
-              <div class="stat-item"><div class="stat-val num">{totalLinks}</div><div class="stat-label">Links</div></div>
-              <div class="stat-item">              <div class="stat-val num">{linkCategories.length}</div><div class="stat-label">Categories</div></div>
+              <div class="stat-item">
+                <div class="stat-val num">{totalLinks}</div><div class="stat-label">Links</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-val num">{linkCategories.length}</div><div class="stat-label">
+                  Categories
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -94,14 +120,14 @@ const totalLinks = linkCategories.reduce((acc, cat) => {
   </section>
 
   <script>
-    (function() {
-      const sections = document.querySelectorAll('.dir-section[id]');
-      const links = document.querySelectorAll('.directory-sidebar a');
+    (function () {
+      const sections = document.querySelectorAll(".dir-section[id]");
+      const links = document.querySelectorAll(".directory-sidebar a");
       if (!sections.length || !links.length) return;
 
       function setActive(id) {
-        links.forEach(function(l) {
-          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        links.forEach(function (l) {
+          l.classList.toggle("active", l.getAttribute("href") === "#" + id);
         });
       }
 
@@ -115,7 +141,7 @@ const totalLinks = linkCategories.reduce((acc, cat) => {
         setActive(current);
       }
 
-      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
     })();
   </script>

@@ -16,8 +16,9 @@ type Props = CollectionEntry<"blog">;
 const post = Astro.props;
 const { Content, headings } = await render(post);
 
-const allPosts = (await getPublishedBlogPosts())
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const allPosts = (await getPublishedBlogPosts()).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 const idx = allPosts.findIndex((p) => p.id === post.id);
 const prev = idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
 const next = idx > 0 ? allPosts[idx - 1] : null;

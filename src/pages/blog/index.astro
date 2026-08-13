@@ -33,27 +33,34 @@ const years = Object.keys(postsByYear)
     <div class="container">
       {
         posts.length === 0 ? (
-          <p class="lead" style="text-align: center;">No posts yet. Check back soon.</p>
+          <p class="lead" style="text-align: center;">
+            No posts yet. Check back soon.
+          </p>
         ) : (
           <div class="blog-list">
             {years.map((year) => (
               <>
                 <p class="year-header">{year}</p>
                 {postsByYear[year].map((post) => (
-                  <article class={`blog-item${!post.data.heroImage ? ' no-thumb' : ''}`}>
+                  <article class={`blog-item${!post.data.heroImage ? " no-thumb" : ""}`}>
                     {post.data.heroImage && (
                       <div class="thumb">
                         <img src={post.data.heroImage.src} alt="" />
                       </div>
                     )}
                     <div class="info">
-                      <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+                      <h3>
+                        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                      </h3>
                       <p class="dek">{post.data.description}</p>
                       <div class="foot">
-                        <span class="meta-date"><FormattedDate date={post.data.pubDate} /></span>
-                        {post.data.tags && post.data.tags.map((tag: string) => (
-                          <span class="pill pill-accent">{tag}</span>
-                        ))}
+                        <span class="meta-date">
+                          <FormattedDate date={post.data.pubDate} />
+                        </span>
+                        {post.data.tags &&
+                          post.data.tags.map((tag: string) => (
+                            <span class="pill pill-accent">{tag}</span>
+                          ))}
                       </div>
                     </div>
                   </article>

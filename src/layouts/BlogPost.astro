@@ -11,7 +11,18 @@ type Props = CollectionEntry<"blog">["data"] & {
   next?: { id: string; data: CollectionEntry<"blog">["data"] };
 };
 
-const { title, description, pubDate, updatedDate, heroImage, heroCaption, tags, headings, prev, next } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  heroCaption,
+  tags,
+  headings,
+  prev,
+  next,
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -22,34 +33,39 @@ const { title, description, pubDate, updatedDate, heroImage, heroCaption, tags, 
           tags && tags.length > 0 && (
             <div class="meta-row" style="margin-bottom: var(--gap-md);">
               <span class="pill pill-accent">{tags[0]}</span>
-              {tags.slice(1).map((tag) => <span class="pill pill-accent">{tag}</span>)}
+              {tags.slice(1).map((tag) => (
+                <span class="pill pill-accent">{tag}</span>
+              ))}
               <span class="sep">·</span>
-              <span class="meta-date"><FormattedDate date={pubDate} /></span>
+              <span class="meta-date">
+                <FormattedDate date={pubDate} />
+              </span>
             </div>
           )
         }
         {
           (!tags || tags.length === 0) && (
             <div class="meta-row" style="margin-bottom: var(--gap-md);">
-              <span class="meta-date"><FormattedDate date={pubDate} /></span>
+              <span class="meta-date">
+                <FormattedDate date={pubDate} />
+              </span>
             </div>
           )
         }
         {
           updatedDate && (
             <div class="meta-row" style="margin-bottom: var(--gap-md);">
-              <span class="meta-date">Updated <FormattedDate date={updatedDate} /></span>
+              <span class="meta-date">
+                Updated <FormattedDate date={updatedDate} />
+              </span>
             </div>
           )
         }
         <h1>
-          <span class="accent">/</span> {title}
+          <span class="accent">/</span>
+          {title}
         </h1>
-        {
-          description && (
-            <p class="lead">{description}</p>
-          )
-        }
+        {description && <p class="lead">{description}</p>}
       </div>
     </div>
 
@@ -99,47 +115,47 @@ const { title, description, pubDate, updatedDate, heroImage, heroCaption, tags, 
                 <span class="nav-label">Previous</span>
                 <span class="nav-title">{prev.data.title}</span>
               </a>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
             {next ? (
               <a href={`/blog/${next.id}/`} class="next">
                 <span class="nav-label">Next</span>
                 <span class="nav-title">{next.data.title}</span>
               </a>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
           </nav>
         </div>
       </div>
     )
   }
 
-  {
-    headings && headings.length > 0 && (
-      <script>
-        (function () {
-          const headings = document.querySelectorAll('.prose [id]');
-          const links = document.querySelectorAll('.toc a');
-          if (!headings.length || !links.length) return;
+  <script>
+    (function () {
+      const headings = document.querySelectorAll(".prose [id]");
+      const links = document.querySelectorAll(".toc a");
+      if (!headings.length || !links.length) return;
 
-          function setActive(id) {
-            links.forEach(function (l) {
-              l.classList.toggle('active', l.getAttribute('href') === '#' + id);
-            });
-          }
+      function setActive(id) {
+        links.forEach(function (l) {
+          l.classList.toggle("active", l.getAttribute("href") === "#" + id);
+        });
+      }
 
-          function onScroll() {
-            let current = headings[0].id;
-            const offset = 100;
-            for (let i = 0; i < headings.length; i++) {
-              const rect = headings[i].getBoundingClientRect();
-              if (rect.top <= offset) current = headings[i].id;
-            }
-            setActive(current);
-          }
+      function onScroll() {
+        let current = headings[0].id;
+        const offset = 100;
+        for (let i = 0; i < headings.length; i++) {
+          const rect = headings[i].getBoundingClientRect();
+          if (rect.top <= offset) current = headings[i].id;
+        }
+        setActive(current);
+      }
 
-          window.addEventListener('scroll', onScroll, { passive: true });
-          onScroll();
-        })();
-      </script>
-    )
-  }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
 </BaseLayout>
