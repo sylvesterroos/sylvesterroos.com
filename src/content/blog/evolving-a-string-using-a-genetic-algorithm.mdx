@@ -9,8 +9,10 @@ draft: false
 ---
 
 import Aside from "../../components/Aside.astro";
-import TwoPointCrossover from "../../components/TwoPointCrossover.astro";
+import Mutation from "../../components/Mutation.astro";
 import StringEvolution from "../../components/StringEvolution.astro";
+import TournamentSelection from "../../components/TournamentSelection.astro";
+import TwoPointCrossover from "../../components/TwoPointCrossover.astro";
 
 ## Why?
 
@@ -103,6 +105,10 @@ Each encoding in Petri comes with its own set of selection-, crossover- and muta
 
 For the selection strategy I chose tournament selection. It picks five chromosomes at random and keeps the fittest, and repeats this `population_size` times. It is less aggressive than always taking the absolute best, which would kill diversity quickly, and less loose than picking uniformly, which barely improves at all. Size 5 in a population of 200 individuals gives the stronger individuals a clear advantage without making the selection almost deterministic.
 
+Play around with the tournament sizes to get a feel for how it works.
+
+<TournamentSelection />
+
 For the crossover strategy I chose two-point crossover. It cuts both parents at two positions and swaps the middle segment.
 
 This is the shuffling of the fragments in action. Drag the handles to see how the parents will be combined into children.
@@ -112,6 +118,8 @@ This is the shuffling of the fragments in action. Drag the handles to see how th
 Petri's integer encoding also has a single-point crossover, which cuts just once. Both would likely yield similar results, but feel free to verify this.
 
 For the mutation strategy I chose uniform mutation. It rolls a die for every gene independently, if it hits, it mutates the gene. In our case it replaces the gene with a random value between 0 and 255. At a 2% rate, a typical 107-gene chromosome sees about two mutations per generation. It's enough to explore, but not enough to wreck good fragments that took hundreds of generations to assemble.
+
+<Mutation />
 
 I also keep one elite: the single best chromosome which is copied into the next generation unchanged. One is enough to anchor the population, more than one would quickly cause the elites to start dominating before the search has found anything interesting.
 

@@ -1,0 +1,23 @@
+---
+import "../styles/tournament-selection.css";
+---
+
+<div id="tournament-selection" class="tournament">
+  <div class="ts-bars" data-bars></div>
+  <div class="ts-controls">
+    <label class="ts-slider-label"
+      >tournament size <input type="range" class="ts-slider" data-size /></label
+    >
+    <span class="ts-size-value" data-size-value>5</span>
+    <button type="button" class="ts-btn" data-run>run tournament</button>
+    <button type="button" class="ts-btn" data-run-many>run 100</button>
+    <button type="button" class="ts-btn" data-reset>reset</button>
+  </div>
+  <div class="ts-status" data-status></div>
+</div>
+
+<script>
+  import { mountTournamentSelection } from "../lib/tournament-selection";
+  const root = document.getElementById("tournament-selection");
+  if (root) mountTournamentSelection(root);
+</script>

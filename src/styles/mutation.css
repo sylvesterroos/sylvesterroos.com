@@ -1,0 +1,101 @@
+/* Shared styling for the Mutation widget (blog post). */
+.mutation {
+  --mu-guaranteed: #60a5fa;
+  --mu-per-gene: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 24px 0;
+  font-family: var(--font-mono);
+}
+.mu-string {
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  white-space: pre-wrap;
+  min-height: 24px;
+}
+.mu-string .mu-guaranteed {
+  color: var(--mu-guaranteed);
+}
+.mu-string .mu-per-gene {
+  color: var(--mu-per-gene);
+}
+.mu-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.mu-slider-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.mu-slider-label[data-cause="rate"] {
+  color: var(--mu-guaranteed);
+}
+.mu-slider-label[data-cause="gene"] {
+  color: var(--mu-per-gene);
+}
+.mu-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+}
+.mu-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.mu-slider-label[data-cause="rate"] .mu-slider::-webkit-slider-thumb {
+  background: var(--mu-guaranteed);
+}
+.mu-slider-label[data-cause="gene"] .mu-slider::-webkit-slider-thumb {
+  background: var(--mu-per-gene);
+}
+.mu-value {
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 4ch;
+}
+.mu-value[data-cause="rate"] {
+  color: var(--mu-guaranteed);
+}
+.mu-value[data-cause="gene"] {
+  color: var(--mu-per-gene);
+}
+.mu-btn {
+  background: var(--surface-bright);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+.mu-btn:hover {
+  background: var(--border);
+}
+.mu-info {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 18px;
+  height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

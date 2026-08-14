@@ -1,0 +1,26 @@
+---
+import "../styles/mutation.css";
+---
+
+<div id="mutation" class="mutation">
+  <div class="mu-string" data-string></div>
+  <div class="mu-controls">
+    <label class="mu-slider-label" data-cause="rate"
+      >mutation rate <input type="range" class="mu-slider" data-rate /></label
+    >
+    <span class="mu-value" data-cause="rate" data-rate-value>1.00</span>
+    <label class="mu-slider-label" data-cause="gene"
+      >per-gene rate <input type="range" class="mu-slider" data-per-gene /></label
+    >
+    <span class="mu-value" data-cause="gene" data-per-gene-value>2%</span>
+    <button type="button" class="mu-btn" data-mutate>mutate</button>
+    <button type="button" class="mu-btn" data-reset>reset</button>
+  </div>
+  <div class="mu-info" data-info></div>
+</div>
+
+<script>
+  import { mountMutation } from "../lib/mutation";
+  const root = document.getElementById("mutation");
+  if (root) mountMutation(root);
+</script>
