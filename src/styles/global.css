@@ -705,6 +705,14 @@ h3 {
   border: 1px solid var(--border);
   margin: var(--gap-lg) 0;
 }
+.prose img.petri-logo {
+  width: 96px;
+  height: 96px;
+  float: right;
+  margin: var(--gap-xs) 0 var(--gap-sm) var(--gap-md);
+  border: 0;
+  border-radius: 0;
+}
 .prose .meta-row {
   font-family: var(--font-mono);
   font-size: 12px;
