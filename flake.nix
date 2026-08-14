@@ -20,7 +20,7 @@
         packages.default = pkgs.callPackage ./nix/package.nix { };
 
         devenv.shells.default = {
-          imports = [ ./devenv.nix ];
+          imports = [ ./nix/devenv.nix ];
         };
       };
     };
