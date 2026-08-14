@@ -39,7 +39,6 @@ export function mountStringEvolution(root: HTMLElement): () => void {
   let snapshots: Snapshot[] = [];
   let target = "";
   let max = 0;
-  let split = 0;
   let playing = false;
   let finished = false;
   let timer: ReturnType<typeof setInterval> | null = null;
@@ -75,18 +74,6 @@ export function mountStringEvolution(root: HTMLElement): () => void {
     }, 50);
   }
 
-  function computeSplit() {
-    if (!strEl || !target) return;
-    const fs = getComputedStyle(strEl);
-    const probe = document.createElement("canvas").getContext("2d");
-    if (!probe) return;
-    probe.font = fs.font;
-    const charW = probe.measureText("M").width + parseFloat(fs.letterSpacing || "0");
-    const perLine = Math.floor(strEl.clientWidth / charW);
-    const sp = target.lastIndexOf(" ", perLine - 1);
-    split = sp >= 0 ? sp + 1 : perLine;
-  }
-
   function render(idx: number) {
     if (disposed || !snapshots.length || !strEl || !barEl || !slider || !infoEl) return;
     const snap = snapshots[idx];
@@ -100,7 +87,6 @@ export function mountStringEvolution(root: HTMLElement): () => void {
       else if (c === tgt) cls = "correct";
       else cls = "wrong";
       const esc = c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : c;
-      if (i === split) html += "<br>";
       html += `<span class="${cls}">${esc}</span>`;
     }
     strEl.innerHTML = html;
@@ -137,12 +123,6 @@ export function mountStringEvolution(root: HTMLElement): () => void {
     }
   }
 
-  function onResize() {
-    if (disposed) return;
-    computeSplit();
-    render(parseInt(slider?.value ?? "0", 10));
-  }
-
   slider?.addEventListener("input", onSliderInput);
   playBtn?.addEventListener("click", onPlayClick);
 
@@ -155,8 +135,6 @@ export function mountStringEvolution(root: HTMLElement): () => void {
         target = data.target;
         max = data.max_fitness;
         if (slider) slider.max = String(snapshots.length - 1);
-        computeSplit();
-        window.addEventListener("resize", onResize);
         render(0);
       })
       .catch(() => {
@@ -169,6 +147,5 @@ export function mountStringEvolution(root: HTMLElement): () => void {
     stopPlaying(ICON_PLAY);
     slider?.removeEventListener("input", onSliderInput);
     playBtn?.removeEventListener("click", onPlayClick);
-    window.removeEventListener("resize", onResize);
   };
 }

@@ -596,7 +596,7 @@ h3 {
 /* Prose (blog posts, markdown content) */
 .prose {
   max-width: 680px;
-  margin-inline: auto;
+  min-width: 0;
 }
 .prose h1 {
   font-size: var(--fs-h1);

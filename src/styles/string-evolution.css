@@ -15,7 +15,8 @@
 .evo-string {
   font-size: 13px;
   line-height: 1.8;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   min-height: 60px;
   letter-spacing: 1px;
 }
@@ -52,6 +53,7 @@
 .evo-fitness {
   margin-top: 10px;
   font-size: 12px;
+  line-height: 1.5;
   color: var(--muted);
 }
 .evo-controls {
@@ -99,4 +101,36 @@
   color: var(--muted);
   white-space: nowrap;
   flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .evo-controls {
+    flex-wrap: wrap;
+  }
+  .evo-info {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+  .evo-fitness {
+    min-height: 3em;
+  }
+}
+
+/* The chromosome is a fixed 107-char string, but space-wrapping makes its
+   line count depend on where spaces fall in the current snapshot. Reserve
+   the max line count at each width so the card never resizes while you
+   scrub. line-height is 1.8, so N lines = N × 1.8em. */
+@media (max-width: 560px) {
+  .evo-string {
+    min-height: 5.4em; /* 3 lines */
+  }
+}
+@media (max-width: 420px) {
+  .evo-string {
+    min-height: 7.2em; /* 4 lines */
+  }
+}
+@media (max-width: 330px) {
+  .evo-string {
+    min-height: 9em; /* 5 lines */
+  }
 }
